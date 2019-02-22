@@ -33,7 +33,7 @@
     "@types/on-finished": "^2.3.1",
     "@types/serve-static": "1.13.2",
     "@types/type-is": "^1.6.2",
-    "ajv": "^6.5.1",
+    "ajv": "^6.9.2",
     "body-parser": "^1.18.3",
     "cors": "^2.8.4",
     "debug": "^4.0.1",
