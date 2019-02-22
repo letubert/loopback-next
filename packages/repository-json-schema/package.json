@@ -34,7 +34,7 @@
     "@loopback/testlab": "^1.0.6",
     "@loopback/tslint-config": "^2.0.0",
     "@types/node": "^10.11.2",
-    "ajv": "^6.5.0"
+    "ajv": "^6.9.2"
   },
   "files": [
     "README.md",
