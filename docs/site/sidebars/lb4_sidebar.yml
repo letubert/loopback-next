@@ -100,7 +100,7 @@ children:
       output: 'web, pdf'
 
   - title: 'Creating an Express Application with LoopBack REST API'
-    url: express-with-lb4-rest-tutorial.md.html
+    url: express-with-lb4-rest-tutorial.html
     output: 'web, pdf'
 
 - title: 'Key concepts'

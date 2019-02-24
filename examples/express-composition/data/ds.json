@@ -1,13 +1,11 @@
 {
   "ids": {
-    "Note": 5
+    "Note": 3
   },
   "models": {
     "Note": {
-      "1": "{\"title\":\"be happy\",\"content\":\"yay\",\"id\":1}",
-      "2": "{\"title\":\"be awesome\",\"content\":\"very very awesome!\",\"id\":2}",
-      "3": "{\"title\":\"be great\",\"id\":3}",
-      "4": "{\"title\":\"be the best\",\"content\":\"do good\",\"id\":4}"
+      "1": "{\"title\":\"Things I need to buy\",\"content\":\"milk, cereal, and waffles\",\"id\":1}",
+      "2": "{\"title\":\"Great frameworks\",\"content\":\"LoopBack is a great framework\",\"id\":2}"
     }
   }
 }

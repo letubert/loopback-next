@@ -8,7 +8,7 @@ import * as http from 'http';
 
 export class ExpressServer {
   private app: express.Application;
-  private lbApp: NoteApplication;
+  public readonly lbApp: NoteApplication;
   private server: http.Server;
 
   constructor(options: ApplicationConfig = {}) {
@@ -16,8 +16,7 @@ export class ExpressServer {
     this.lbApp = new NoteApplication(options);
 
     // Expose the front-end assets via Express, not as LB4 route
-    this.lbApp.basePath('/api');
-    this.app.use(this.lbApp.requestHandler);
+    this.app.use('/api', this.lbApp.requestHandler);
 
     // Custom Express routes
     this.app.get('/', function(_req: Request, res: Response) {
@@ -31,21 +30,19 @@ export class ExpressServer {
     });
   }
 
-  async boot() {
+  public async boot() {
     await this.lbApp.boot();
   }
 
-  async start() {
+  public async start() {
     this.server = this.app.listen(3000);
     await pEvent(this.server, 'listening');
   }
 
   // For testing purposes
-  async stop() {
+  public async stop() {
+    if (!this.server) return;
     this.server.close();
-  }
-
-  async getLBApp() {
-    return this.lbApp;
+    await pEvent(this.server, 'close');
   }
 }

@@ -36,9 +36,9 @@ describe('ExpressApplication', () => {
 
   it('displays explorer page', async () => {
     // /api/explorer will redirect to /explorer/
-    await client.get('/api/explorer').then(res => {
+    await client.get('/api/explorer').then(async res => {
       expect(res.header.location).to.equal('/explorer/');
-      client
+      await client
         .get('/explorer/')
         .expect(200)
         .expect('Content-Type', /text\/html/)

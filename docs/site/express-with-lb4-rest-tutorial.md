@@ -50,7 +50,7 @@ application, follow these steps:
     ```sh
     $ npm start
 
-    Server is running at http://127.0.0.1:3000
+    Server is running at http://localhost:3000
     ```
 
 ### Create your LoopBack Application
@@ -79,70 +79,15 @@ $ lb4 app
 
 #### Add Note Model
 
-Inside the project folder, run `lb4 model` to create the `Note` and fill out the
-following prompts as follows:
-
-```sh
-$ cd note
-$ lb4 model
-? Model class name: note
-? Please select the model base class: Entity (A persisted model with an ID)
-? Allow additional (free-form) properties? No
-
-Let's add a property to Note
-Enter an empty property name when done
-
-? Enter the property name: id
-? Property type: number
-? Is id the ID property? Yes
-? Is it required?: No
-? Default value [leave blank for none]:
-
-Let's add another property to Note
-Enter an empty property name when done
-
-? Enter the property name: title
-? Property type: string
-? Is it required?: Yes
-? Default value [leave blank for none]:
-
-Let's add another property to Note
-Enter an empty property name when done
-
-? Enter the property name: content
-? Property type: string
-? Is it required?: No
-? Default value [leave blank for none]:
-
-Let's add another property to Note
-Enter an empty property name when done
-
-? Enter the property name:
-
-   create src/models/note.model.ts
-   update src/models/index.ts
-
-Model note was created in src/models/
-```
+Inside the project folder, run `lb4 model` to create the `Note` model with
+`Entity` model base class. Add an `id` property with type `number`, a required
+`title` property with type `string`, and a `content` property of type `string`.
 
 #### Add a DataSource
 
 Now, let's create a simple in-memory datasource by running the `lb4 datasource`
-command and filling out the prompts as follows:
-
-```sh
-$ lb4 datasource
-? Datasource name: ds
-? Select the connector for ds: In-memory db (supported by StrongLoop)
-? window.localStorage key to use for persistence (browser only):
-? Full path to file for persistence (server only): ./data/ds.json
-
-  create src/datasources/ds.datasource.json
-  create src/datasources/ds.datasource.ts
-  update src/datasources/index.ts
-
-Datasource ds was created in src/datasources/
-```
+command with the name `ds` and the following full path to file:
+`./data/ds.json`.
 
 Similar to the `Todo` example, let's create the `ds.json` by creating a data
 folder at the application's root.
@@ -171,38 +116,17 @@ Then copy and paste the following into the `ds.json` file:
 #### Add Note Repository
 
 To create the repository, run the `lb4 repository` command and choose the
-`DsDataSource` and `Note` model, as follows:
-
-```sh
-$ lb4 repository
-? Please select the datasource DsDatasource
-? Select the model(s) you want to generate a repository Note
-   create src/repositories/note.repository.ts
-   update src/repositories/index.ts
-
-Repository Note was created in src/repositories/
-```
+`DsDataSource` as the datasource and `Note` model as the model.
 
 #### Add Note Controller
 
 To complete the `Note` application, create a controller using the
-`lb4 controller` command and the following prompts:
+`lb4 controller` command, with the name `note` with the
+`REST Controller with CRUD functions` type, `Note` model, and `NoteRepository`.
+The `id`'s type will be `number` and base HTTP path name is the default
+`/notes`.
 
-```sh
-$ lb4 controller
-? Controller class name: note
-? What kind of controller would you like to generate? REST Controller with CRUD functions
-? What is the name of the model to use with this CRUD repository? Note
-? What is the name of your CRUD repository? NoteRepository
-? What is the type of your ID? number
-? What is the base HTTP path name of the CRUD operations? /notes
-   create src/controllers/note.controller.ts
-   update src/controllers/index.ts
-
-Controller note was created in src/controllers/
-```
-
-### Express Class
+### Create a Facade Express Application
 
 Create a new file **src/server.ts** to create your Express class:
 
@@ -244,8 +168,7 @@ Now, inside the constructor, we're going to add the basepath and expose the
 front-end assets via Express:
 
 ```ts
-this.lbApp.basePath('/api');
-this.app.use(this.lbApp.requestHandler);
+this.app.use('/api', this.lbApp.requestHandler);
 ```
 
 Then, we can add some custom Express routes, as follows:
@@ -259,21 +182,31 @@ export class ExpressApplication {
   private lbApp: NoteApplication;
 
   constructor(options: ApplicationConfig = {}) {
-  // earlier code
+    // earlier code
 
-  // Custom Express routes
-  this.app.get('/', function(_req: Request, res: Response) {
-    res.sendFile(path.resolve('public/express.html'));
-  });
-  this.app.get('/hello', function(_req: Request, res: Response) {
-    res.send('Hello world!');
-  });
+    // Custom Express routes
+    this.app.get('/', function(_req: Request, res: Response) {
+      res.sendFile(path.resolve('public/express.html'));
+    });
+    this.app.get('/hello', function(_req: Request, res: Response) {
+      res.send('Hello world!');
+    });
+  }
 }
 ```
 
 And add the
 [public/express.html](https://github.com/strongloop/loopback-next/blob/master/examples/express-composition/public/express.html)
 file to your project.
+
+Let's also modify `public/index.html` to update the base path:
+
+{% include code-caption.html content="public/index.html" %}
+
+```html
+<h3>OpenAPI spec: <a href="/api/openapi.json">/openapi.json</a></h3>
+<h3>API Explorer: <a href="/api/explorer">/explorer</a></h3>
+```
 
 Finally, we can add functions to boot the `Note` application and start the
 Express application:
@@ -304,10 +237,8 @@ export class ExpressApplication {
 }
 ```
 
-[This](https://github.com/strongloop/loopback-next/blob/master/examples/express-composition/src/server.ts)
-is what your final `server.ts` file should look like.
-
-Then, we can modify our **src/index.ts** file to start the application:
+Now that our `server.ts` file is ready, then we can modify our **src/index.ts**
+file to start the application:
 
 {% include code-caption.html content="src/index.ts" %}
 
